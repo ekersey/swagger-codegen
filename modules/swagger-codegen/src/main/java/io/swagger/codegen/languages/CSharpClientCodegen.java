@@ -792,6 +792,7 @@ public class CSharpClientCodegen extends AbstractCSharpCodegen {
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
+        this.packageGuid = "{" + java.util.UUID.nameUUIDFromBytes(packageName.getBytes()).toString().toUpperCase() + "}";
     }
 
     public void setPackageVersion(String packageVersion) {
