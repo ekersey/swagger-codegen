@@ -103,7 +103,7 @@ public class DefaultCodegen {
     protected Boolean sortParamsByRequiredFlag = true;
     protected Boolean ensureUniqueParams = true;
     protected Boolean allowUnicodeIdentifiers = false;
-    protected String gitUserId, gitRepoId, releaseNote;
+    protected String gitUserId, gitRepoId, releaseNote, gitRepoBaseURL;
     protected String httpUserAgent;
     protected Boolean hideGenerationTimestamp = true;
     protected Boolean skipAliasGeneration;
@@ -116,6 +116,7 @@ public class DefaultCodegen {
     protected Map<String, String> typeAliases = null;
 
     protected String ignoreFilePathOverride;
+
 
     public List<CliOption> cliOptions() {
         return cliOptions;
@@ -3206,7 +3207,7 @@ public class DefaultCodegen {
      * @return The underscored version of the word
      */
     public static String underscore(String word) {
-        String firstPattern = "([A-Z]+)([A-Z][a-z])";
+        String firstPattern = "([A-Z]+)([A-Z][a-z][a-z]+)";
         String secondPattern = "([a-z\\d])([A-Z])";
         String replacementPattern = "$1_$2";
         // Replace package separator with slash.
@@ -3660,6 +3661,24 @@ public class DefaultCodegen {
     }
 
     /**
+     * Set Git repo Base URL.
+     *
+     * @param gitRepoBaseURL Git repo ID
+     */
+    public void setGitRepoBaseURL(String gitRepoBaseURL) {
+        this.gitRepoBaseURL = gitRepoBaseURL;
+    }
+
+    /**
+     * Git repo Base URL
+     *
+     * @return Git Base URL
+     */
+    public String getGitRepoBaseURL() {
+        return gitRepoBaseURL;
+    }
+
+    /**
      * Set release note.
      *
      * @param releaseNote Release note
@@ -4090,5 +4109,9 @@ public class DefaultCodegen {
             return true;
         }
         return false;
+    }
+
+    public boolean isUsingFlattenSpec() {
+        return true;
     }
 }
