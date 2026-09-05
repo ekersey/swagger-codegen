@@ -51,6 +51,7 @@ public class CodegenTest {
 
         Assert.assertEquals(codegen.underscore("FooBar"), "foo_bar");
         Assert.assertEquals(codegen.underscore("FooBarBaz"), "foo_bar_baz");
+        Assert.assertEquals(codegen.underscore("HTTPServer"), "http_server");
     }
 
     @Test(description = "test camelize")
@@ -503,7 +504,7 @@ public class CodegenTest {
         final CodegenModel codegenModel = codegen.fromModel("Amount", amount, swagger.getDefinitions());
         for (CodegenProperty codegenProperty : codegenModel.vars) {
             if ("currency".equalsIgnoreCase(codegenProperty.name)) {
-                Assert.assertEquals(codegenProperty.pattern, "^[A-Z]{3,3}$");
+                Assert.assertEquals(codegenProperty.pattern, "/^[A-Z]{3,3}$/");
                 break;
             }
         }

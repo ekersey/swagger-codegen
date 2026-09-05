@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    exclude-paths:
+      - "samples/**"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]

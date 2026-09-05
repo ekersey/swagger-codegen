@@ -23,9 +23,10 @@ jobs:
         java: [ 11 ]
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
+          distribution: temurin
           java-version: ${{ matrix.java }}
       - name: build codegen
         run: |
@@ -36,7 +37,7 @@ jobs:
           cp modules/swagger-codegen-cli/target/swagger-codegen-cli.jar codegen-cli
 
       - name: upload codegen cli
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: codegen-cli
           path: codegen-cli
@@ -61,12 +62,13 @@ jobs:
       generate_outcome: ${{ steps.outcome.outputs.generate_outcome }}
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
+          distribution: temurin
           java-version: ${{ matrix.java }}
       - name: Download codegen cli
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: codegen-cli
       - name: generate
@@ -83,18 +85,18 @@ jobs:
           echo "generate_outcome=${{ steps.generate.outcome }}" >> $GITHUB_OUTPUT
           echo ${{ steps.generate.outcome }} > generate_outcome_${{ env.JOB_NAME }}
       - name: upload generate outcome
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generate_outcome
           path: generate_outcome_${{ env.JOB_NAME }}
       - name: upload generate logs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generate_logs
           path: ${{ steps.generate.outputs.logs }}
       - name: upload generated code
         if: contains(steps.generate.outcome, 'success')
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generated
           path: ${{ steps.generate.outputs.path }}
@@ -113,20 +115,20 @@ jobs:
       ##### DYNAMIC: Dependent on build environment
       ###############################################
       matrix:
-        ruby: ['2.2']
+        ruby: ['2.3']
         java: [ 11 ]
       ###############################################
       ##### END DYNAMIC: Dependent on build environment
       ###############################################
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generated
           path: generated/${{ env.JOB_NAME }}
       - name: Download logs
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generate_logs
       ###############################################
@@ -136,8 +138,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v5
         with:
+          distribution: temurin
           java-version: ${{ matrix.java }}
       - name: ruby test files
         run: |
@@ -160,12 +163,12 @@ jobs:
           echo "build_outcome=${{ steps.build.outcome }}" >> $GITHUB_OUTPUT
           echo ${{ steps.build.outcome }} > ${{ env.JOB_NAME }}build_outcome
       - name: upload build outcome
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}build_outcome
           path: ${{ env.JOB_NAME }}build_outcome
       - name: upload logs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}logs
           path: ${{ steps.build.outputs.logs }}
@@ -190,12 +193,13 @@ jobs:
       generate_outcome: ${{ steps.outcome.outputs.generate_outcome }}
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
+          distribution: temurin
           java-version: ${{ matrix.java }}
       - name: Download codegen cli
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: codegen-cli
       - name: generate
@@ -212,18 +216,18 @@ jobs:
           echo "generate_outcome=${{ steps.generate.outcome }}" >> $GITHUB_OUTPUT
           echo ${{ steps.generate.outcome }} > generate_outcome_${{ env.JOB_NAME }}
       - name: upload generate outcome
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generate_outcome
           path: generate_outcome_${{ env.JOB_NAME }}
       - name: upload generate logs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generate_logs
           path: ${{ steps.generate.outputs.logs }}
       - name: upload generated code
         if: contains(steps.generate.outcome, 'success')
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generated
           path: ${{ steps.generate.outputs.path }}
@@ -248,14 +252,14 @@ jobs:
       ##### END DYNAMIC: Dependent on build environment
       ###############################################
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generated
           path: generated/${{ env.JOB_NAME }}
       - name: Download logs
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generate_logs
       ###############################################
@@ -265,8 +269,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v5
         with:
+          distribution: temurin
           java-version: ${{ matrix.java }}
       - name: Javascript test files
         run: |
@@ -286,12 +291,12 @@ jobs:
           echo "build_outcome=${{ steps.build.outcome }}" >> $GITHUB_OUTPUT
           echo ${{ steps.build.outcome }} > ${{ env.JOB_NAME }}build_outcome
       - name: upload build outcome
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}build_outcome
           path: ${{ env.JOB_NAME }}build_outcome
       - name: upload logs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}logs
           path: ${{ steps.build.outputs.logs }}
@@ -316,12 +321,13 @@ jobs:
       generate_outcome: ${{ steps.outcome.outputs.generate_outcome }}
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
+          distribution: temurin
           java-version: ${{ matrix.java }}
       - name: Download codegen cli
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: codegen-cli
       - name: generate
@@ -338,18 +344,18 @@ jobs:
           echo "generate_outcome=${{ steps.generate.outcome }}" >> $GITHUB_OUTPUT
           echo ${{ steps.generate.outcome }} > generate_outcome_${{ env.JOB_NAME }}
       - name: upload generate outcome
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generate_outcome
           path: generate_outcome_${{ env.JOB_NAME }}
       - name: upload generate logs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generate_logs
           path: ${{ steps.generate.outputs.logs }}
       - name: upload generated code
         if: contains(steps.generate.outcome, 'success')
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generated
           path: ${{ steps.generate.outputs.path }}
@@ -374,14 +380,14 @@ jobs:
       ##### END DYNAMIC: Dependent on build environment
       ###############################################
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generated
           path: generated/${{ env.JOB_NAME }}
       - name: Download logs
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}generate_logs
       ###############################################
@@ -391,8 +397,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v5
         with:
+          distribution: temurin
           java-version: ${{ matrix.java }}
       - name: PHP test files
         run: |
@@ -420,12 +427,12 @@ jobs:
           echo "build_outcome=${{ steps.build.outcome }}" >> $GITHUB_OUTPUT
           echo ${{ steps.build.outcome }} > ${{ env.JOB_NAME }}build_outcome
       - name: upload build outcome
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}build_outcome
           path: ${{ env.JOB_NAME }}build_outcome
       - name: upload logs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.JOB_NAME }}logs
           path: ${{ steps.build.outputs.logs }}
